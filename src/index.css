@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h2 {
+        @apply text-4xl py-3;
+    }
+
+    h3 {
+        @apply text-2xl py-3;
+    }
+
+    li {
+        @apply p-2 text-[1.2rem] cursor-pointer border rounded mb-2 last:mb-0 hover:shadow-sm transition-all;
+    }
+
+    p {
+        @apply py-2 text-[1.2rem];
+    }
+}
+
+@layer components {
+    .price {
+        @apply text-[1.2rem] font-semibold;
+    }
+
+    .button {
+        @apply mt-[1rem] rounded-[.25rem] border p-3 hover:shadow-sm transition-all max-w-fit min-w-[13rem];
+    }
+}
