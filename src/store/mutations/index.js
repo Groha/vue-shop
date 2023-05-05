@@ -40,5 +40,5 @@ export default {
   },
   EMPTY_CART: (state) => {
     state.cart = []
-  }
+  },
 }

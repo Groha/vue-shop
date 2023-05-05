@@ -4,6 +4,12 @@ import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
 
+import VuexPersistence from 'vuex-persist'
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
+
 export default createStore({
   state: {
     products: [],
@@ -13,5 +19,6 @@ export default createStore({
   },
   actions,
   mutations,
-  getters
+  getters,
+  plugins: [vuexLocal.plugin]
 })

@@ -18,27 +18,25 @@
       </div>
     </div>
     <p v-else>There are no products in cart...</p>
-    <div v-if="showSuccessModal" class="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-      <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-center first-line:text-xl font-bold mb-4">Your order has been placed successfully!</h2>
-        <p class="text-center">Thank you for your purchase.</p>
-        <DefaultButton class="mt-4 mx-auto block" @click="closeModal">OK</DefaultButton>
-      </div>
-    </div>
+    <CheckoutModal v-if="showCheckoutModal" @showCheckoutModal="isShowCheckout"></CheckoutModal>
+    <SuccessModal v-if="showSuccessModal" @showSuccessModal="isShowSuccess"></SuccessModal>
   </section>
 </template>
 
 <script>
 import CartCard from '../components/cards/CartCard.vue'
 import DefaultButton from '../components/buttons/DefaultButton.vue'
+import CheckoutModal from '../components/modals/CheckoutModal.vue'
+import SuccessModal from '../components/modals/SuccessModal.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'CartDetails',
-  components: { CartCard, DefaultButton },
+  components: { CartCard, DefaultButton, CheckoutModal, SuccessModal },
   data() {
     return {
-      showSuccessModal: false
+      showCheckoutModal: false,
+      showSuccessModal: false,
     }
   },
   computed: {
@@ -66,11 +64,15 @@ export default {
       this.INCREMENT_QTY(idx)
     },
     checkout() {
-      this.CLEAR_CART()
-      this.showSuccessModal = true
+      this.showCheckoutModal = true
     },
-    closeModal() {
-      this.showSuccessModal = false
+    isShowCheckout(data) {
+      this.showCheckoutModal = data
+      this.showSuccessModal = !data
+      this.CLEAR_CART()
+    },
+    isShowSuccess(data) {
+      this.showSuccessModal = data
     }
   }
 }

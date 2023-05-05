@@ -25,29 +25,39 @@
         </li>
       </ul>
     </aside>
-    <section class="grid grid-cols-4 gap-5 w-full">
-      <ProductCard
-        v-for="product in filteredProducts"
-        :key="product.id"
-        :product_data="product"
-        @addToCart="addToCart"
-      >
-      </ProductCard>
+    <section>
+      <div class="grid grid-cols-4 gap-5 w-full">
+        <ProductCard
+          v-for="product in paginatedData"
+          :key="product.id"
+          :product_data="product"
+          @addToCart="addToCart"
+        >
+        </ProductCard>
+      </div>
+      <CustomPagination
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @page-changed="pageChanged"
+      />
     </section>
   </div>
 </template>
 
 <script>
 import ProductCard from '../components/cards/ProductCard.vue'
+import CustomPagination from "../components/CustomPagination.vue";
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'HomePage',
-  components: { ProductCard },
+  components: { ProductCard, CustomPagination },
   data() {
     return {
       selectedCategory: null,
-      sortedProducts: []
+      sortedProducts: [],
+      itemsPerPage: 4,
+      currentPage: 1
     }
   },
   props: {
@@ -62,6 +72,14 @@ export default {
       } else {
         return this.PRODUCTS
       }
+    },
+    paginatedData() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.filteredProducts.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
     }
   },
   methods: {
@@ -83,6 +101,9 @@ export default {
     clearCategory() {
       this.sortedProducts = []
       this.selectedCategory = null
+    },
+    pageChanged(pageNumber) {
+      this.currentPage = pageNumber;
     }
   },
   mounted() {

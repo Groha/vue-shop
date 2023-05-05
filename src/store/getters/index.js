@@ -10,5 +10,5 @@ export default {
   },
   PRODUCT(state) {
     return state.product;
-  }
+  },
 }
