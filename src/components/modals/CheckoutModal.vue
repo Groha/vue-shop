@@ -1,6 +1,7 @@
 <template>
-  <div class="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-    <div class="bg-white p-8 rounded-lg w-[600px] relative">
+  <div class="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-75 flex justify-center items-center z-50" @click="onClickOutside">
+    <div class="bg-white p-8 rounded-lg w-[600px] relative" @click.stop>
+      <span class="absolute right-3 top-1 cursor-pointer font-bold" @click="closeCheckoutModal">x</span>
       <form action="" class="grid gap-5">
         <label for="firstName" class="grid relative">
           First Name
@@ -33,7 +34,7 @@
   import { required, email } from '@vuelidate/validators'
 
   export default {
-    name: 'SuccessModal',
+    name: 'CheckoutModal',
     components: { DefaultButton },
     data() {
       return {
@@ -54,12 +55,31 @@
         email: { email, required }
       }
     },
+    mounted() {
+      document.addEventListener('keydown', this.onKeyDown);
+    },
+    beforeUnmount() {
+      document.removeEventListener('keydown', this.onKeyDown);
+    },
     methods: {
       async submitForm () {
         const isFormCorrect = await this.v$.$validate()
         if (!isFormCorrect) return
         this.$emit('showCheckoutModal', !isFormCorrect)
-      }
+      },
+      closeCheckoutModal() {
+        this.$emit('closeCheckoutModal', true)
+      },
+      onClickOutside(event) {
+        if (event.target === this.$el) {
+          this.closeCheckoutModal();
+        }
+      },
+      onKeyDown(event) {
+        if (event.key === 'Escape') {
+          this.closeCheckoutModal();
+        }
+      },
     }
   }
 </script>

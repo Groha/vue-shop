@@ -1,24 +1,26 @@
 <template>
   <section class="p-4 mt-24">
-    <div v-if="CART.length">
-      <ul>
-        <CartCard
-          v-for="(cartItem, idx) in CART"
-          :key="cartItem.id"
-          :cart_item_data="cartItem"
-          @removeItemFromCart="removeItemFromCart(idx)"
-          @decrementQuantity="decrementQuantity(idx)"
-          @incrementQuantity="incrementQuantity(idx)"
-        >
-        </CartCard>
-      </ul>
-      <div class="flex justify-between items-center">
-        <span class="price ml-32">Summ: <span>{{ cartTotalCost }}$</span></span>
-        <DefaultButton @click="checkout">Checkout</DefaultButton>
+    <transition name="switch" mode="out-in">
+      <div v-if="CART.length">
+        <transition-group tag="ul" name="cartProducts" appear class="relative">
+          <CartCard
+            v-for="(cartItem, idx) in CART"
+            :key="cartItem.id"
+            :cart_item_data="cartItem"
+            @removeItemFromCart="removeItemFromCart(idx)"
+            @decrementQuantity="decrementQuantity(idx)"
+            @incrementQuantity="incrementQuantity(idx)"
+          >
+          </CartCard>
+        </transition-group>
+        <div class="flex justify-between items-center">
+          <span class="price ml-32">Summ: <span>{{ cartTotalCost }}$</span></span>
+          <DefaultButton @click="checkout">Checkout</DefaultButton>
+        </div>
       </div>
-    </div>
-    <p v-else>There are no products in cart...</p>
-    <CheckoutModal v-if="showCheckoutModal" @showCheckoutModal="isShowCheckout"></CheckoutModal>
+      <p v-else>There are no products in cart...</p>
+    </transition>
+    <CheckoutModal v-if="showCheckoutModal" @showCheckoutModal="isShowCheckout" @closeCheckoutModal="isCloseCheckout"></CheckoutModal>
     <SuccessModal v-if="showSuccessModal" @showSuccessModal="isShowSuccess"></SuccessModal>
   </section>
 </template>
@@ -71,9 +73,36 @@ export default {
       this.showSuccessModal = !data
       this.CLEAR_CART()
     },
+    isCloseCheckout(data) {
+      data ? this.showCheckoutModal = this.showSuccessModal = !data : null
+    },
     isShowSuccess(data) {
       this.showSuccessModal = data
     }
   }
 }
 </script>
+
+<style scoped>
+.cartProducts-leave-to {
+  opacity: 0;
+  transform: translate(100px, -100px);
+}
+.cartProducts-leave-active {
+  transition: all 0.2s ease;
+  position: absolute;
+}
+.cartProducts-move {
+  transition: all 0.4s ease;
+}
+
+.switch-enter-from,
+.switch-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.switch-enter-active,
+.switch-leave-active {
+  transition: all 0.5s ease;
+}
+</style>

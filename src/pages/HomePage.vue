@@ -16,10 +16,10 @@
         </li>
         <li 
           class="flex justify-between"
-          @click="sortByCategories('')">
+          @click="sortByCategories(0)">
           Без категории
           <span 
-            v-show="selectedCategory === ''"
+            v-show="selectedCategory === 0"
             @click.stop="clearCategory">x
           </span>
         </li>
@@ -41,24 +41,28 @@
       </ul>
     </aside>
     <section>
-      <div class="grid grid-cols-4 gap-5 w-full" v-if="paginatedData.length">
-        <ProductCard
-          v-for="product in paginatedData"
-          :key="product.id"
-          :product_data="product"
-          @addToCart="addToCart"
-        >
-        </ProductCard>
-      </div>
-      <h2 v-else>
-        Sorry, no products found...
-      </h2>
-      <CustomPagination
-        :currentPage="currentPage"
-        :totalPages="totalPages"
-        @page-changed="pageChanged"
-        v-if="paginatedData.length > 3"
-      />
+      <transition name="switch" mode="out-in">
+        <div v-if="paginatedData.length">
+          <div class="grid grid-cols-4 gap-5 w-full">
+            <ProductCard
+              v-for="product in paginatedData"
+              :key="product.id"
+              :product_data="product"
+              @addToCart="addToCart"
+            >
+            </ProductCard>
+          </div>
+          <CustomPagination
+            v-if="paginatedData.length"
+            :currentPage="currentPage"
+            :totalPages="totalPages"
+            @page-changed="pageChanged"
+          />
+        </div>
+        <h2 v-else>
+          Sorry, no products found...
+        </h2>
+      </transition>
     </section>
   </div>
 </template>
@@ -74,7 +78,6 @@ export default {
   data() {
     return {
       selectedCategory: null,
-      sortedProducts: [],
       itemsPerPage: 4,
       currentPage: 1,
       searchTerm: ''
@@ -87,19 +90,26 @@ export default {
       'PRODUCTS', 'CATEGORIES'
     ]),
     filteredProducts() {
-      let products = this.PRODUCTS
+      let products = this.PRODUCTS;
       if (this.selectedCategory !== null) {
-        products = products.filter(product => product.categoryIds.includes(this.selectedCategory))
+        products = products.filter(product => {
+          return product.defaultCategoryId === this.selectedCategory
+        }
+          
+        );
       }
       if (this.searchTerm !== "") {
-        products = products.filter(product => product.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+        products = products.filter(product =>
+          product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
       }
-      return products
+      return products;
     },
     paginatedData() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredProducts.slice(startIndex, endIndex);
+      const sortedData = this.filteredProducts.slice(startIndex, endIndex);
+      return sortedData;
     },
     totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
@@ -113,17 +123,12 @@ export default {
       this.ADD_TO_CART(data)
     },
     sortByCategories(category) {
-      this.sortedProducts = []
-      this.selectedCategory = category
-      this.PRODUCTS.forEach(product => {
-        if(product.categoryIds.join() === category.toString()) {
-          this.sortedProducts.push(product)
-        }
-      });
+      this.selectedCategory = category;
+      this.currentPage = 1;
     },
     clearCategory() {
-      this.sortedProducts = []
       this.selectedCategory = null
+      this.currentPage = 1;
     },
     clearSearch() {
       this.searchTerm = ''
@@ -141,3 +146,15 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.switch-enter-from,
+.switch-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.switch-enter-active,
+.switch-leave-active {
+  transition: all 0.5s ease;
+}
+</style>
