@@ -7,7 +7,7 @@
           v-for="category in CATEGORIES"
           :key="category.id"
           @click="sortByCategories(category.id)"
-          class="flex justify-between">
+          class="flex justify-between btn">
           {{ category.name }}
           <span 
             v-show="selectedCategory === category.id"
@@ -15,7 +15,7 @@
           </span>
         </li>
         <li 
-          class="flex justify-between"
+          class="flex justify-between btn"
           @click="sortByCategories(0)">
           Без категории
           <span 
@@ -23,14 +23,14 @@
             @click.stop="clearCategory">x
           </span>
         </li>
-        <li class="relative cursor-auto">
+        <li class="relative cursor-auto btn">
           <input 
             type="text"
             placeholder="Search products..."
             class="border-0 p-0"
             v-model="searchTerm"
             @input="searchProducts">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#838383" class="absolute right-2 top-2 pointer-events-none" v-if="!searchTerm.length"><path d="M23.111 20.058l-4.977-4.977c.965-1.52 1.523-3.322 1.523-5.251 0-5.42-4.409-9.83-9.829-9.83-5.42 0-9.828 4.41-9.828 9.83s4.408 9.83 9.829 9.83c1.834 0 3.552-.505 5.022-1.383l5.021 5.021c2.144 2.141 5.384-1.096 3.239-3.24zm-20.064-10.228c0-3.739 3.043-6.782 6.782-6.782s6.782 3.042 6.782 6.782-3.043 6.782-6.782 6.782-6.782-3.043-6.782-6.782zm2.01-1.764c1.984-4.599 8.664-4.066 9.922.749-2.534-2.974-6.993-3.294-9.922-.749z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#838383" class="absolute right-2 top-[50%] -translate-y-[50%] pointer-events-none" v-if="!searchTerm.length"><path d="M23.111 20.058l-4.977-4.977c.965-1.52 1.523-3.322 1.523-5.251 0-5.42-4.409-9.83-9.829-9.83-5.42 0-9.828 4.41-9.828 9.83s4.408 9.83 9.829 9.83c1.834 0 3.552-.505 5.022-1.383l5.021 5.021c2.144 2.141 5.384-1.096 3.239-3.24zm-20.064-10.228c0-3.739 3.043-6.782 6.782-6.782s6.782 3.042 6.782 6.782-3.043 6.782-6.782 6.782-6.782-3.043-6.782-6.782zm2.01-1.764c1.984-4.599 8.664-4.066 9.922.749-2.534-2.974-6.993-3.294-9.922-.749z"/></svg>
           <span 
             v-else
             @click.stop="clearSearch"
@@ -93,9 +93,9 @@ export default {
       let products = this.PRODUCTS;
       if (this.selectedCategory !== null) {
         products = products.filter(product => {
-          return product.defaultCategoryId === this.selectedCategory
-        }
-          
+          console.log(product.category.split('category ', ''), this.selectedCategory)
+          return product.category.replace('category ', '') === this.selectedCategory
+          }
         );
       }
       if (this.searchTerm !== "") {
@@ -123,6 +123,7 @@ export default {
       this.ADD_TO_CART(data)
     },
     sortByCategories(category) {
+      console.log(category)
       this.selectedCategory = category;
       this.currentPage = 1;
     },

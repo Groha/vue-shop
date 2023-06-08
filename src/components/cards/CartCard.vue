@@ -1,7 +1,7 @@
 <template>
   <li class="flex items-center cursor-default">
     <div class="w-24 h-24 rounded overflow-hidden mr-5">
-      <img :src="cart_item_data.imageUrl" alt="" class="w-full h-full object-cover object-center">
+      <img :src="cart_item_data.url" alt="" class="w-full h-full object-cover object-center">
     </div>
     <div class="flex flex-col w-[30%]">
       <h3>{{ cart_item_data.name }}</h3>

@@ -123,6 +123,8 @@ li {
   padding: 0;
   font-size: 1rem;
   margin-right: 4px;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
 }
 
 li a {

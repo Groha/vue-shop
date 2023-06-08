@@ -11,10 +11,6 @@
     @apply text-2xl py-3;
   }
 
-  li {
-    @apply p-2 text-[1.2rem] cursor-pointer border rounded mb-2 last:mb-0 hover:shadow-sm transition-all;
-  }
-
   p {
     @apply py-2 text-[1.2rem];
   }
@@ -29,8 +25,12 @@
     @apply mt-[1rem] rounded-[.25rem] border p-3 hover:shadow-sm transition-all max-w-fit min-w-[13rem];
   }
 
-  input {
+  input, textarea {
     @apply border rounded px-2 py-3 outline-0;
+  }
+
+  li.btn {
+    @apply p-2 text-[1.2rem] cursor-pointer border rounded mb-2 last:mb-0 hover:shadow-sm transition-all;
   }
 }
 

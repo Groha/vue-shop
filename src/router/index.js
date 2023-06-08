@@ -3,7 +3,7 @@ import HomePage from '../pages/HomePage';
 import ProductDetails from '../pages/ProductDetails';
 import CartDetails from '../pages/CartDetails';
 import NotFound from '../pages/NotFoundPage';
-import AdminPage from '../pages/AdminPage';
+import AdminAuth from '../pages/AdminAuth';
 
 
 const routes = [
@@ -11,7 +11,7 @@ const routes = [
   { path: '/product/:id', name: 'product', component: ProductDetails },
   { path: '/cart', name: 'cart', component: CartDetails },
   { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
-  { path: '/admin', name: 'admin', component: AdminPage },
+  { path: '/admin', name: 'admin', component: AdminAuth },
 ];
 
 const router = createRouter({

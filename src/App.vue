@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     isAdminPage() {
-      return this.$route.name === 'admin' || this.$route.name === 'products';
+      return this.$route.name === 'admin' || this.$route.name === 'addProduct';
     }
   },
   methods: {

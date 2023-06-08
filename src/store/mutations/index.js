@@ -1,12 +1,18 @@
 export default {
   SET_PRODUCTS_TO_STATE: (state, products) => {
-    state.products = products.items
+    state.products = products
   },
   GET_PRODUCT_INFO: (state, id) => {
     state.product = id
   },
   SET_PRODUCTS_CATEGORIES: (state, categories) => {
-    state.categories = categories.items
+    state.categories = categories
+  },
+  ADD_PRODUCT_TO_STATE(state, newProduct) {
+    state.products.push(newProduct);
+  },
+  REMOVE_PRODUCT: (state, productIndex) => {
+    state.products.splice(productIndex, 1);
   },
   SET_CART: (state, product) => {
     const addProduct = () => {
