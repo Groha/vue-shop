@@ -1,11 +1,11 @@
 <template>
   <li class="flex items-center cursor-default">
-    <div class="w-24 h-24 rounded overflow-hidden mr-5">
-      <img :src="cart_item_data.url" alt="" class="w-full h-full object-cover object-center">
+    <div class="w-24 h-24 rounded overflow-hidden mr-5 bg-[#F4F4F4]">
+      <img :src="cart_item_data.url" alt="" class="w-full h-full object-contain object-center">
     </div>
     <div class="flex flex-col w-[30%]">
       <h3>{{ cart_item_data.name }}</h3>
-      <span class="price">Price: <span>{{ cart_item_data.price }}$</span></span>
+      <span class="price">Price: <span>{{ cart_item_data.price }} €</span></span>
     </div>
     <div class="flex flex-col ml-[5%] items-center justify-center">
       <span>Qty.:</span>

@@ -37,3 +37,20 @@
 *:focus-visible {
   outline: none;
 }
+
+.multiselect {
+  --ms-border-color-active: #e5e7eb;
+  --ms-border-color: #e5e7eb;
+  --ms-option-bg-selected-pointed: #e5e7eb;
+  --ms-option-bg-selected: #e5e7eb;
+  --ms-option-color-selected-pointed: #000;
+  --ms-option-color-selected: #000;
+}
+
+.multiselect .multiselect-clear {
+  display: none;
+}
+
+.multiselect.is-active {
+  box-shadow: none !important;
+}

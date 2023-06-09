@@ -1,145 +1,148 @@
 <template>
   <div class="p-4">
-    <button class="px-5 py-1 border rounded-md ml-auto block mb-6" @click="openAddForm">add new product</button>
+    <div class="mb-6 last:mb-0 flex justify-between">
+      <div>
+        <input type="text" placeholder="Add new category" class="px-5 py-1 border rounded-md mr-6" v-model.trim="newCategory">
+        <button class="px-5 py-1 border rounded-md" @click="addCategory">add new category</button>
+      </div>
+      <button class="px-5 py-1 border rounded-md" @click="openAddForm">add new product</button>
+    </div>
     <div
       v-for="product in PRODUCTS"
       :key="product.id"
       class="flex border p-3 rounded-sm mb-4 last:mb-0"
     >
-      <div class="w-24 h-24 border rounded-sm mr-5 last:mr-0 flex-shrink-0">
-        <img :src="product.url" alt="" class="w-full h-full object-cover object-center">
+      <div class="w-24 h-24 border rounded-sm mr-5 last:mr-0 flex-shrink-0 bg-[#F4F4F4]">
+        <img :src="product.url" alt="" class="w-full h-full object-contain object-center">
       </div>
       <div class="w-full mr-5 last:mr-0">
-        <span class="font-bold uppercase mr-3">id: {{ product.id }}</span><span class="font-bold uppercase mr-3">category: {{ product.category }}</span>
+        <span class="font-bold uppercase mr-3">id: {{ product.id }}</span><span class="font-bold uppercase mr-3">category: {{ product.category }}</span><span class="font-bold uppercase mr-3">Price: {{ product.price }} €</span>
         <h4 class="font-semibold uppercase">{{ product.name }}</h4>
         <div v-html="product.description"></div>
       </div>
       <div class="grid gap-1 w-fit h-fit flex-shrink-0">
-        <button class="px-5 py-1 border rounded-md" @click="openEditForm(product)">change</button>
+        <button class="px-5 py-1 border rounded-md" @click="openEditForm(product.id)">change</button>
         <button class="px-5 py-1 border rounded-md" @click="deleteProduct(product.id)">delete</button>
       </div>
     </div>
   </div>
-  <div v-if="isOpen" class="fixed z-10 w-screen h-screen bg-slate-400 inset-0">
-    <form class="bg-white relative top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[60%] p-10 rounded-lg">
-      <div class="flex gap-3 mb-3 last:mb-0">
-        <input v-if="!isEditing" type="text" placeholder="ID" class="w-full" v-model.trim="id">
-        <input type="text" placeholder="Category" class="w-full" v-model.trim="category">
-      </div>
-      <input type="text" placeholder="Url" class="w-full mb-3 last:mb-0" v-model.trim="url">
-      <input type="text" placeholder="Price" class="w-full mb-3 last:mb-0" v-model.trim="price">
-      <input type="text" placeholder="Title" class="w-full mb-3 last:mb-0" v-model.trim="name">
-      <textarea placeholder="Description" class="w-full mb-3 last:mb-0" v-model="description"></textarea>
-      <button
-        v-if="!isEditing"
-        type="submit"
-        @click="addNewProduct"
-        class="px-5 py-1 border rounded-md block mx-auto uppercase"
-      >
-        add product
-      </button>
-      <button
-        v-if="isEditing"
-        type="submit"
-        @click="updateProduct"
-        class="px-5 py-1 border rounded-md block mx-auto uppercase"
-      >
-        update product
-      </button>
-    </form>
-  </div>
+  <ProductModal
+    v-if="isOpenModal"
+    :isEditing="isEditing"
+    :categories="categories"
+    :changedProduct="changedProduct"
+    @close="isOpenModal = false"
+    @add="addNewProduct"
+    @update="updateProduct"
+  ></ProductModal>
   <section class="md:flex">
   </section>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import ProductModal from '../components/modals/ProductModal.vue'
 
 export default {
   name: 'AdminPage',
   data() {
     return {
-      isOpen: false,
+      isOpenModal: false,
       isEditing: false,
-      id: '',
       name: '',
       category: '',
       price: '',
       url: '',
-      editedProductId: null
+      description: '',
+      editedProductId: null,
+      newCategory: '',
+      changedProduct: {}
     }
+  },
+  components: {
+    ProductModal
   },
   computed: {
     ...mapGetters([
-      'PRODUCTS'
-    ])
+      'PRODUCTS', 'CATEGORIES'
+    ]),
+    categories() {
+      return this.CATEGORIES;
+    },
   },
   methods: {
     ...mapActions([
-      'GET_PRODUCTS', 'ADD_NEW_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT'
+      'GET_PRODUCTS', 'ADD_NEW_PRODUCT', 'EDIT_PRODUCT', 'DELETE_PRODUCT', 'ADD_NEW_CATEGORY'
     ]),
-    generateProductId() {
-      const date = new Date();
-      const timestamp = date.getTime();
-      return timestamp.toString();
-    },
     openAddForm() {
       this.resetForm();
-      this.isOpen = true;
+      this.isOpenModal = true;
       this.isEditing = false;
     },
-    openEditForm(product) {
-      this.editedProductId = product.id;
-      this.id = product.id;
-      this.name = product.name;
-      this.category = product.category;
-      this.price = product.price;
-      this.url = product.url;
-      this.description = product.description;
-      this.isOpen = true;
-      this.isEditing = true;
+    openEditForm(productId) {
+
+      this.editedProductId = productId;
+      const product = this.PRODUCTS.find(p => p.id === productId);
+      if (product) {
+        this.changedProduct = product
+        // this.name = product.name;
+        // this.category = product.category;
+        // this.price = product.price;
+        // this.url = product.url;
+        // this.description = product.description;
+        this.isOpenModal = true;
+        this.isEditing = true;
+      }
     },
     resetForm() {
-      this.id = '';
       this.name = '';
       this.category = '';
       this.price = '';
       this.url = '';
       this.description = '';
     },
-    addNewProduct() {
-      const newProduct = {
-        id: this.generateProductId(),
-        name: this.name,
-        description: this.description,
-        category: this.category,
-        price: this.price,
-        url: this.url,
-      };
-
+    addNewProduct(newProduct) {
       this.ADD_NEW_PRODUCT(newProduct)
-        .then(response => {
-          console.log('Product added:', response);
-          this.resetForm();
-          this.isOpen = false;
-        })
-        .catch(error => {
-          console.error('Error adding product:', error);
-        });
+      this.resetForm();
+      this.isOpenModal = false;
+    },
+    updateProduct(updatedProduct) {
+      this.EDIT_PRODUCT({ productId: this.editedProductId, updatedProduct })
+      this.resetForm();
+      this.isOpenModal = false;
     },
     deleteProduct(productId) {
       this.DELETE_PRODUCT(productId)
-        .then(response => {
-          console.log('Product deleted:', response);
-        })
-        .catch(error => {
-          console.error('Error deleting product:', error);
-        });
-    }
+    },
+    addCategory() {
+      const newCategory = {
+        name: this.newCategory.trim()
+      };
+      if (newCategory) {
+        this.ADD_NEW_CATEGORY(newCategory);
+        this.newCategory = '';
+      }
+    },
+    validatePriceInput() {
+      this.price = this.price.replace(/[^\d.]/g, '');
+      const dotIndex = this.price.indexOf('.');
+      if (dotIndex !== -1) {
+        this.price = this.price.slice(0, dotIndex + 1) + this.price.slice(dotIndex + 1).replace(/\./g, '');
+      }
+    },
+    onKeyDown(event) {
+      if (event.key === 'Escape') {
+        this.isOpenModal = false
+      }
+    },
   },
   mounted() {
-    this.GET_PRODUCTS()
-  }
+    this.GET_PRODUCTS(),
+    document.addEventListener('keydown', this.onKeyDown);
+  },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+  },
 }
 </script>
 

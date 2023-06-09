@@ -14,7 +14,7 @@
           </CartCard>
         </transition-group>
         <div class="flex justify-between items-center">
-          <span class="price ml-32">Summ: <span>{{ cartTotalCost }}$</span></span>
+          <span class="price ml-32">Summ: <span>{{ cartTotalCost }} €</span></span>
           <DefaultButton @click="checkout">Checkout</DefaultButton>
         </div>
       </div>

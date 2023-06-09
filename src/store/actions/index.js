@@ -44,6 +44,22 @@ export default {
       return error;
     }
   },
+  async EDIT_PRODUCT({ commit, state }, { productId, updatedProduct }) {
+    try {
+      const response = await axios.put(`${apiURL}products/${productId}`, updatedProduct);
+      const updatedData = response.data;
+      const productIndex = state.products.findIndex(product => product.id === productId);
+      if (productIndex !== -1) {
+        commit('UPDATE_PRODUCT', { productIndex, updatedProduct: updatedData });
+        return updatedData;
+      } else {
+        throw new Error('Product not found');
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
   async DELETE_PRODUCT({ commit, state }, productId) {
     try {
       await axios.delete(`${apiURL}products/${productId}`);
@@ -53,6 +69,19 @@ export default {
         return 'Product deleted';
       } else {
         throw new Error('Product not found');
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+  async ADD_NEW_CATEGORY({ commit, state }, categoryData) {
+    try {
+      if (!state.categories.includes(categoryData)) {
+        const response = await axios.post(`${apiURL}categories`, categoryData);
+        const newCategory = response.data;
+        commit('ADD_CATEGORY_TO_STATE', newCategory);
+        return newCategory;
       }
     } catch (error) {
       console.error(error);

@@ -11,8 +11,14 @@ export default {
   ADD_PRODUCT_TO_STATE(state, newProduct) {
     state.products.push(newProduct);
   },
-  REMOVE_PRODUCT: (state, productIndex) => {
+  UPDATE_PRODUCT(state, { productIndex, updatedProduct }) {
+    state.products[productIndex] = updatedProduct;
+  },
+  REMOVE_PRODUCT(state, productIndex) {
     state.products.splice(productIndex, 1);
+  },
+  ADD_CATEGORY_TO_STATE(state, newCategory) {
+    state.categories.push(newCategory);
   },
   SET_CART: (state, product) => {
     const addProduct = () => {

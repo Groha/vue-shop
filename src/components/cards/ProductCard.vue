@@ -2,12 +2,12 @@
   <div class="flex flex-col p-2 border rounded-[.5rem] shadow-sm" @click="handleClick">
     <router-link 
       :to="{ name: 'product', params: { id: product_data.id } }"
-      class="flex-grow">
-      <div class="w-full pb-[120%] relative rounded-[.25rem] overflow-hidden">
-        <img :src="product_data.url" alt="" class="absolute w-full h-full object-cover">
+      class="flex-grow flex flex-col">
+      <div class="w-full pb-[120%] relative rounded-[.25rem] overflow-hidden bg-[#F4F4F4]">
+        <img :src="product_data.url" alt="" class="absolute w-full h-full object-contain">
       </div>
-      <h3 class="">{{ product_data.name }}</h3>
-      <span class="price">Price: <span>{{ product_data.price }}$</span></span>
+      <h3 class="flex-grow">{{ product_data.name }}</h3>
+      <span class="price">Price: <span>{{ product_data.price }} €</span></span>
     </router-link>
     <DefaultButton
       class="mx-auto"

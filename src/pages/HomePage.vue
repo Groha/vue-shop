@@ -6,20 +6,11 @@
         <li
           v-for="category in CATEGORIES"
           :key="category.id"
-          @click="sortByCategories(category.id)"
+          @click="sortByCategories(category.name)"
           class="flex justify-between btn">
           {{ category.name }}
           <span 
-            v-show="selectedCategory === category.id"
-            @click.stop="clearCategory">x
-          </span>
-        </li>
-        <li 
-          class="flex justify-between btn"
-          @click="sortByCategories(0)">
-          Без категории
-          <span 
-            v-show="selectedCategory === 0"
+            v-show="selectedCategory === category.name"
             @click.stop="clearCategory">x
           </span>
         </li>
@@ -93,8 +84,7 @@ export default {
       let products = this.PRODUCTS;
       if (this.selectedCategory !== null) {
         products = products.filter(product => {
-          console.log(product.category.split('category ', ''), this.selectedCategory)
-          return product.category.replace('category ', '') === this.selectedCategory
+          return product.category === this.selectedCategory
           }
         );
       }
@@ -123,7 +113,6 @@ export default {
       this.ADD_TO_CART(data)
     },
     sortByCategories(category) {
-      console.log(category)
       this.selectedCategory = category;
       this.currentPage = 1;
     },
