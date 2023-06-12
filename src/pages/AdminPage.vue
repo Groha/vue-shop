@@ -78,6 +78,7 @@ export default {
       this.resetForm();
       this.isOpenModal = true;
       this.isEditing = false;
+      this.changedProduct = {}
     },
     openEditForm(productId) {
 
@@ -85,11 +86,6 @@ export default {
       const product = this.PRODUCTS.find(p => p.id === productId);
       if (product) {
         this.changedProduct = product
-        // this.name = product.name;
-        // this.category = product.category;
-        // this.price = product.price;
-        // this.url = product.url;
-        // this.description = product.description;
         this.isOpenModal = true;
         this.isEditing = true;
       }

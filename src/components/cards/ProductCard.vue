@@ -6,7 +6,7 @@
       <div class="w-full pb-[120%] relative rounded-[.25rem] overflow-hidden bg-[#F4F4F4]">
         <img :src="product_data.url" alt="" class="absolute w-full h-full object-contain">
       </div>
-      <h3 class="flex-grow">{{ product_data.name }}</h3>
+      <h3 class="flex-grow text-ellipsis overflow-hidden whitespace-nowrap">{{ product_data.name }}</h3>
       <span class="price">Price: <span>{{ product_data.price }} €</span></span>
     </router-link>
     <DefaultButton
